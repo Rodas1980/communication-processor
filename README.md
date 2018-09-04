@@ -5,7 +5,9 @@ This Project is  my answer to the exercise in https://github.com/vas-test/test1
 Service Port :
 8090
 
+
 Service Endpoints :
+
 / = Home page it shows some of the instructions on how to use the service .
 
 /processfile?date= YYYYMMDD - This endpoints goes and gets one of the json files in https://github.com/vas-test/test1/tree/master/logs
@@ -16,4 +18,6 @@ Service Endpoints :
 /kpis - Show overall information referent to the Service 
                    
                    
+To create a Jar use mvn clean package.
+
 Project by Rodrigo Sanches
