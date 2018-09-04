@@ -13,19 +13,19 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-public class FileLoader {
+public class FileProcessor {
 
     private Ksip ksip;
     private JacksonUtil jacksonUtil;
     private String url;
 
-    public FileLoader(Ksip ksip , JacksonUtil jacksonUtil , String url) {
+    public FileProcessor(Ksip ksip , JacksonUtil jacksonUtil , String url) {
         this.ksip = ksip;
         this.jacksonUtil = jacksonUtil;
         this.url = url;
     }
 
-    public String loadFile () throws IOException{
+    public String processFile() throws IOException{
 
 
         LinkedList<JSONObject> jsonObjectsParsed;
@@ -45,7 +45,7 @@ public class FileLoader {
                     "wrong format." + System.getProperty("line.separator") + " Date format should be YYYYMMDD." +
                     "Example: /?date = 19910811";
         }
-        
+
 
         long start_time = System.nanoTime();
         jsonObjectsParsed = JsonDeparserUtil.getJsonObjectsFromFile(streamReader);

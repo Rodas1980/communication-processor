@@ -1,21 +1,12 @@
 package communicationprocessor.controller;
 
-import java.io.File;
 import java.io.IOException;
 
-import communicationprocessor.services.FileLoader;
+import communicationprocessor.services.FileProcessor;
 import communicationprocessor.services.ksip.Ksip;
 import communicationprocessor.services.metric.Metric;
-import communicationprocessor.services.MetricKpisCalculator;
-import communicationprocessor.utility.HttpDownloadUtility;
 import communicationprocessor.utility.JacksonUtil;
-import communicationprocessor.utility.JsonDeparserUtil;
 
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
-
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,8 +51,8 @@ public class CommunicationController {
 
             String fileURL = url + date + extension;
 
-            FileLoader fileLoader = new FileLoader(ksip,jacksonUtil,fileURL);
-            return fileLoader.loadFile();
+            FileProcessor fileProcessor = new FileProcessor(ksip,jacksonUtil,fileURL);
+            return fileProcessor.processFile();
 
         }catch (IOException e){
             e.printStackTrace();
