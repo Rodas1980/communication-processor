@@ -3,14 +3,14 @@ package communicationprocessor.services;
 import communicationprocessor.communicationtypes.call.Call;
 import communicationprocessor.communicationtypes.msg.Msg;
 import communicationprocessor.services.metric.Metric;
-import communicationprocessor.utility.JacksonUtil;
 import communicationprocessor.services.metric.call.CallMetrics;
 import communicationprocessor.services.metric.msg.MsgMetrics;
+import communicationprocessor.utility.JacksonUtil;
+import org.json.simple.JSONObject;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
-
-import org.json.simple.JSONObject;
 
 
 public class MetricKpisCalculator {

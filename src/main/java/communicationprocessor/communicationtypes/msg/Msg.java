@@ -107,15 +107,6 @@ public class Msg {
         return true;
     }
 
-    public boolean checkValidityCellphoneNumber(Integer number){
-
-        if(number.toString().length() <= 9 || number.toString().length() > 12 ){
-            return true;
-        }
-
-        return false;
-
-    }
 
     public boolean isFieldError(){
         return fieldError;
