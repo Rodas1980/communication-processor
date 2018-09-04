@@ -24,11 +24,5 @@ public class PhoneNumber {
         this.countryCode = countryCode;
     }
 
-    @SpringBootApplication
-    public static class Application {
 
-        public static void main(String[] args) {
-            SpringApplication.run(Application.class, args);
-        }
-    }
 }
