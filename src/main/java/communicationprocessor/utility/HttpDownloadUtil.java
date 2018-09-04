@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class HttpDownloadUtility {
+public class HttpDownloadUtil {
     private static final int BUFFER_SIZE = 4096;
  
     /**

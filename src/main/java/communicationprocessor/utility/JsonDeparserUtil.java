@@ -10,28 +10,18 @@ import java.util.LinkedList;
 
 public class JsonDeparserUtil {
 
-    public static LinkedList<JSONObject> getJsonObjectsFromFile(InputStreamReader inputStreamReader){
+    public static LinkedList<JSONObject> getJsonObjectsFromFile(InputStreamReader inputStreamReader) throws Exception{
 
         LinkedList<JSONObject> jsonObjects = new LinkedList<>();
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject;
         String line = null;
 
-        try {
-            BufferedReader bReader = new BufferedReader(inputStreamReader);
+        BufferedReader bReader = new BufferedReader(inputStreamReader);
             while((line = bReader.readLine()) != null) {
                 jsonObject = (JSONObject) jsonParser.parse(line);
                 jsonObjects.add(jsonObject);
             }
-
-
-        } catch (FileNotFoundException e) {
-            return null ;
-        } catch (ParseException e) {
-            return null;
-        } catch (IOException e) {
-            return null;
-        }
 
 
         for (JSONObject j:jsonObjects) {

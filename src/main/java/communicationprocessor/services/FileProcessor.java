@@ -2,10 +2,13 @@ package communicationprocessor.services;
 
 import communicationprocessor.services.ksip.Ksip;
 import communicationprocessor.services.metric.Metric;
-import communicationprocessor.utility.HttpDownloadUtility;
+import communicationprocessor.utility.HttpDownloadUtil;
 import communicationprocessor.utility.JacksonUtil;
 import communicationprocessor.utility.JsonDeparserUtil;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,37 +16,42 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class FileProcessor {
 
-    private Ksip ksip;
-    private JacksonUtil jacksonUtil;
-    private String url;
+    @Autowired
+    Ksip kpis;
 
-    public FileProcessor(Ksip ksip , JacksonUtil jacksonUtil , String url) {
-        this.ksip = ksip;
-        this.jacksonUtil = jacksonUtil;
-        this.url = url;
-    }
+    @Autowired
+    JacksonUtil jacksonUtil;
 
-    public String processFile() throws IOException{
+    @Value("${file.url}")
+    String url;
+
+    @Value("${file.extension}")
+    String extension;
 
 
+    public void process(String date) throws Exception{
+
+
+        String fileURL = url + date + extension;
         LinkedList<JSONObject> jsonObjectsParsed;
         InputStreamReader streamReader;
         MetricKpisCalculator metricCalculator;
-        streamReader = HttpDownloadUtility.downloadFile(url);
+        streamReader = HttpDownloadUtil.downloadFile(fileURL);
         File fileKsip = new File("Ksip.json");
 
         if (fileKsip.exists()){
-            ksip = jacksonUtil.readObjectFromFile(Ksip.class ,"Kpis.json");
+            kpis = jacksonUtil.readObjectFromFile(Ksip.class ,"Kpis.json");
         }
 
 
 
         if(streamReader == null){
-            return "The file was not found . The log file for the date may not exist or input date was in the " +
+            throw new IOException("The file was not found . The log file for the date may not exist or input date was in the " +
                     "wrong format." + System.getProperty("line.separator") + " Date format should be YYYYMMDD." +
-                    "Example: /?date = 19910811";
+                    "Example: /?date = 19910811");
         }
 
 
@@ -53,28 +61,24 @@ public class FileProcessor {
 
         long difference = TimeUnit.NANOSECONDS.toMillis(end_time - start_time);
 
-        if(jsonObjectsParsed == null){
-            return "There was an error parsing the json.";
-        }
 
         metricCalculator = new MetricKpisCalculator(jsonObjectsParsed);
 
         Metric metrics =  metricCalculator.getJsonMetrics();
         jacksonUtil.writeObjectToFile(metrics , "Metric.json");
 
-        ksip.setJsonRead((ksip.getJsonRead())+1);
-        ksip.setTimeToParseJsonFile(difference);
-        ksip.setNumberOfRows((ksip.getNumberOfRows())+ jsonObjectsParsed.size());
-        ksip.setNumberOfCalls((ksip.getNumberOfCalls())+ metricCalculator.getNumberCalls());
-        ksip.setNumberOfMSG((ksip.getNumberOfMSG())+ metricCalculator.getNumberMsg());
-        ksip.getDestinationCodeList().addAll(metricCalculator.getDestinationCodeList());
-        ksip.getOriginCodeList().addAll(metricCalculator.getOriginCodeList());
+
+        kpis.setJsonRead((kpis.getJsonRead())+1);
+        kpis.setTimeToParseJsonFile(difference);
+        kpis.setNumberOfRows((kpis.getNumberOfRows())+ jsonObjectsParsed.size());
+        kpis.setNumberOfCalls((kpis.getNumberOfCalls())+ metricCalculator.getNumberCalls());
+        kpis.setNumberOfMSG((kpis.getNumberOfMSG())+ metricCalculator.getNumberMsg());
+        kpis.getDestinationCodeList().addAll(metricCalculator.getDestinationCodeList());
+        kpis.getOriginCodeList().addAll(metricCalculator.getOriginCodeList());
 
 
 
-        jacksonUtil.writeObjectToFile(ksip , "Kpis.json");
-
-        return "The file was sucessfully read and parsed use /metrics to show metrics or /ksip to show the ksip";
+        jacksonUtil.writeObjectToFile(kpis, "Kpis.json");
 
     }
 }
